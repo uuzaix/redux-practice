@@ -1,29 +1,30 @@
-var expect = require('expect');
+var _ = require('lodash');
 
-const calculator = (state = {input: [], current: 0}, action) => {
+let calculator = (state = {input: [], current: '0'}, action) => {
   switch (action.type) {
     case 'DIGIT':
-      return Object.assign({}, state, {current: state.current *   10 + action.value});
+      if (state.current === '0') {
+        return Object.assign({}, state, {current: action.value.toString()});
+      } else {
+        return Object.assign({}, state, {current: state.current + action.value});
+      }
     case 'OPERATOR':
-      return Object.assign({}, state, {input: [...state.input, state.current, action.value], current: 0});
+      if (typeof _.last(state.input) === 'string' && state.current === '0') {
+      return Object.assign({}, state, {input: [...state.input.slice(0, state.input.length-1),  action.value], current: '0'});
+      }
+      return Object.assign({}, state, {input: [...state.input, parseInt(state.current), action.value], current: '0'});
+    case 'DOT':
+      if (state.current.indexOf('.') !== -1) {
+        return state;
+      }
+      return Object.assign({}, state, {current: state.current + '.'});
+    default:
+      return state;
   }
 }
 
-const testDigit = () => {
-  const stateBefore = {input: [], current: 0};
-  const action = {type: 'DIGIT', value: 1};
-  const stateAfter = {input: [], current: 1};
-  expect(calculator(stateBefore, action)).toEqual(stateAfter);
+module.exports = {
+    calculator
 }
 
-const testOperator = () => {
-  const stateBefore = {input: [], current: 1};
-  const action = {type: 'OPERATOR', value: '+'};
-  const stateAfter = {input: [1, '+'], current: 0};
-  expect(calculator(stateBefore, action)).toEqual(stateAfter);
-}
-
-testDigit();
-testOperator();
-
-console.log('tests pass');
+console.log('calculator');

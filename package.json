@@ -1,0 +1,26 @@
+{
+  "name": "redux-tutorial-videos",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --watch counter.js build/bundle.js --module-bind js=babel",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.16.1",
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1",
+    "redux": "^3.6.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-react": "^6.11.1",
+    "expect": "^1.20.2",
+    "webpack": "^1.13.2"
+  }
+}
