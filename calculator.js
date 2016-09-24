@@ -24,23 +24,31 @@ let calculator = (state = {input: [], current: '0'}, action) => {
       }
       return Object.assign({}, state, {current: state.current + '.'});
 
-      case 'EQUAL':
-      //to check dot at the end of current
-        if (state.input.length === 0 && state.current !== '0') {
-          return Object.assign({}, state, {input: [parseFloat(state.current), '=']});
-        }
-        if (state.input.length !== 0) {
-          let current = eval([...state.input, parseInt(state.current)].join(''));
-          if (current.toString().indexOf('.') !== -1) {
-            current = current.toFixed(8);
-            while (current.endsWith("0")) {
-              current = current.substring(0, current.length-1);
-            }
+    case 'EQUAL':
+      if (state.input.length === 0 && state.current !== '0') {
+        return Object.assign({}, state, {input: [parseFloat(state.current), '=']});
+      }
+      if (state.input.length !== 0) {
+        let current = eval([...state.input, parseInt(state.current)].join(''));
+        if (current.toString().indexOf('.') !== -1) {
+          current = current.toFixed(8);
+          while (current.endsWith("0")) {
+            current = current.substring(0, current.length-1);
           }
-          return Object.assign({}, state, {input: [...state.input, parseFloat(state.current), '='], current: current.toString()})
-        } else {
-          return state;
         }
+        return Object.assign({}, state, {input: [...state.input, parseFloat(state.current), '='], current: current.toString()})
+      } else {
+        return state;
+      }
+
+    case 'CLEARALL':
+      return {input: [], current: '0'};
+
+    case 'CLEARLAST':
+      if (_.last(state.input) === '=') {
+        return {input: [], current: '0'};
+      }
+      return Object.assign({}, state, {current: '0'});
 
     default:
       return state;
