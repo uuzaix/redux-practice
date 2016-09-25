@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var {createStore} = require('redux');
 
 let calculator = (state = {input: [], current: '0'}, action) => {
   switch (action.type) {
@@ -60,3 +61,17 @@ module.exports = {
 };
 
 console.log('calculator');
+
+const store = createStore(calculator);
+
+store.subscribe(() => console.log(store.getState()));
+
+store.dispatch({type: 'DIGIT', value: 1});
+store.dispatch({type: 'DOT'});
+store.dispatch({type: 'DIGIT', value: 3});
+store.dispatch({type: 'OPERATOR', value: '+'});
+store.dispatch({type: 'DIGIT', value: 2});
+store.dispatch({type: 'CLEARLAST'});
+store.dispatch({type: 'DIGIT', value: 5});
+store.dispatch({type: 'EQUAL'});
+store.dispatch({type: 'CLEARALL'});
