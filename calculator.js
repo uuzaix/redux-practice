@@ -1,6 +1,11 @@
 var _ = require('lodash');
 var {createStore} = require('redux');
 
+var React = require('react');
+var { Component } = require('react');
+var ReactDOM = require('react-dom');
+
+
 let calculator = (state = {input: [], current: '0'}, action) => {
   switch (action.type) {
     case 'DIGIT':
@@ -60,18 +65,57 @@ module.exports = {
     calculator
 };
 
-console.log('calculator');
+// console.log('calculator');
 
 const store = createStore(calculator);
 
-store.subscribe(() => console.log(store.getState()));
+// store.subscribe(() => console.log(store.getState()));
 
-store.dispatch({type: 'DIGIT', value: 1});
-store.dispatch({type: 'DOT'});
-store.dispatch({type: 'DIGIT', value: 3});
-store.dispatch({type: 'OPERATOR', value: '+'});
-store.dispatch({type: 'DIGIT', value: 2});
-store.dispatch({type: 'CLEARLAST'});
-store.dispatch({type: 'DIGIT', value: 5});
-store.dispatch({type: 'EQUAL'});
-store.dispatch({type: 'CLEARALL'});
+// store.dispatch({type: 'DIGIT', value: 1});
+// store.dispatch({type: 'DOT'});
+// store.dispatch({type: 'DIGIT', value: 3});
+// store.dispatch({type: 'OPERATOR', value: '+'});
+// store.dispatch({type: 'DIGIT', value: 2});
+// store.dispatch({type: 'CLEARLAST'});
+// store.dispatch({type: 'DIGIT', value: 5});
+// store.dispatch({type: 'EQUAL'});
+// store.dispatch({type: 'CLEARALL'});
+
+class Calculator extends React.Component {
+  render() {
+    return (
+      <div>
+      <p>{this.props.input}</p>
+      <p>{this.props.current}</p>
+      <button onClick={() => {
+        store.dispatch({
+          type: 'DIGIT',
+          value: 1
+        });
+      }}>
+      1
+      </button>
+      <button onClick={() => {
+        store.dispatch({
+          type: 'OPERATOR',
+          value: '+'
+        });
+      }}>
+      +
+      </button>
+      </div>
+    );
+  }
+}
+
+const render = () => {
+  ReactDOM.render(
+    <Calculator 
+    {...store.getState()}
+    />,
+    document.getElementById('a')
+  );
+};
+
+store.subscribe(render);
+render();
