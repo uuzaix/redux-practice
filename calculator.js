@@ -65,8 +65,6 @@ module.exports = {
     calculator
 };
 
-// console.log('calculator');
-
 const store = createStore(calculator);
 
 // store.subscribe(() => console.log(store.getState()));
@@ -87,33 +85,47 @@ class Calculator extends React.Component {
       <div>
       <p>{this.props.input}</p>
       <p>{this.props.current}</p>
-      <button onClick={() => {
-        store.dispatch({
-          type: 'DIGIT',
-          value: 1
-        });
-      }}>
-      1
-      </button>
-      <button onClick={() => {
-        store.dispatch({
-          type: 'OPERATOR',
-          value: '+'
-        });
-      }}>
-      +
-      </button>
+      <Button
+        id={1}
+        onClick={() => {
+          store.dispatch({
+            type: 'DIGIT',
+            value: 1
+          });
+        }
+      }
+      />
+      <Button
+        id={'+'}
+        onClick={() => {
+          store.dispatch({
+            type: 'OPERATOR',
+            value: '+'
+          });
+        }
+      }
+      />
       </div>
     );
   }
 }
+
+const Button = ({
+  onClick,
+  id
+}) => (
+  <button onClick={onClick}>
+  {id}
+  </button>
+  )
+
 
 const render = () => {
   ReactDOM.render(
     <Calculator 
     {...store.getState()}
     />,
-    document.getElementById('a')
+    document.getElementById('calculator')
   );
 };
 
