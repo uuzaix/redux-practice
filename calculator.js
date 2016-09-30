@@ -83,42 +83,86 @@ class Calculator extends React.Component {
   render() {
     return (
       <div>
-      <p>{this.props.input}</p>
-      <p>{this.props.current}</p>
-      <Button
-        id={1}
-        onClick={() => {
-          store.dispatch({
-            type: 'DIGIT',
-            value: 1
-          });
-        }
-      }
-      />
-      <Button
-        id={'+'}
-        onClick={() => {
-          store.dispatch({
-            type: 'OPERATOR',
-            value: '+'
-          });
-        }
-      }
-      />
+        <Display data={this.props} />
+        <Buttons />
       </div>
     );
   }
 }
 
 const Button = ({
-  onClick,
+  type,
   id
 }) => (
-  <button onClick={onClick}>
+  <button 
+  onClick={() => {
+      store.dispatch({
+        type: type,
+        value: id
+      });
+    }}
+  >
   {id}
   </button>
   )
 
+const DigitButton = ({id}) => (
+    <Button type='DIGIT' id={id} />
+)
+
+const OperatorButton = ({id}) => (
+    <Button type='OPERATOR' id={id} />
+)
+
+const DotButton = ({id}) => (
+  <Button type='DOT' id={id} />
+)
+
+const EqualButton = ({id}) => (
+  <Button type='EQUAL' id={id} />
+)
+
+const ClearAllButton = ({id}) => (
+  <Button type='CLEARALL' id={id} />
+)
+
+const ClearLastButton = ({id}) => (
+  <Button type='CLEARLAST' id={id} />
+)
+
+const Display = ({
+  data
+}) =>
+  (
+    <div>
+      <p>{data.input}</p>
+      <p>{data.current}</p>
+    </div>
+  )
+
+const Buttons = ({}) =>
+  (
+    <div>
+      <DigitButton id= '1' />
+      <DigitButton id= '2' />
+      <DigitButton id= '3' />
+      <DigitButton id= '4' />
+      <DigitButton id= '5' />
+      <DigitButton id= '6' />
+      <DigitButton id= '7' />
+      <DigitButton id= '8' />
+      <DigitButton id= '9' />
+      <DigitButton id= '0' />
+      <OperatorButton id='-' />
+      <OperatorButton id='+' />
+      <OperatorButton id='/' />
+      <OperatorButton id='*' />
+      <DotButton id='.'/>
+      <EqualButton id='='/>
+      <ClearAllButton id='C'/>
+      <ClearLastButton id='CE'/>
+    </div>
+    )
 
 const render = () => {
   ReactDOM.render(
