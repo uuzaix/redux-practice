@@ -11,6 +11,8 @@ let calculator = (state = {input: [], current: '0'}, action) => {
     case 'DIGIT':
       if (state.current === '0') {
         return Object.assign({}, state, {current: action.value.toString()});
+      } else if (_.last(state.input) === '=') {
+        return Object.assign({}, {input: [], current: action.value.toString()});
       } else {
         return Object.assign({}, state, {current: state.current + action.value});
       }
@@ -92,75 +94,76 @@ class Calculator extends React.Component {
 
 const Button = ({
   type,
-  id
+  id,
+  value
 }) => (
-  <button 
+  <button id={id} className="btn digit"
   onClick={() => {
       store.dispatch({
         type: type,
-        value: id
+        value: value
       });
     }}
   >
-  {id}
+  {value}
   </button>
   )
 
-const DigitButton = ({id}) => (
-    <Button type='DIGIT' id={id} />
+const DigitButton = ({id, value}) => (
+    <Button type='DIGIT' id={id} value={value} />
 )
 
-const OperatorButton = ({id}) => (
-    <Button type='OPERATOR' id={id} />
+const OperatorButton = ({id, value}) => (
+    <Button type='OPERATOR' id={id} value={value} />
 )
 
-const DotButton = ({id}) => (
-  <Button type='DOT' id={id} />
+const DotButton = ({id, value}) => (
+  <Button type='DOT' id={id} value={value} />
 )
 
-const EqualButton = ({id}) => (
-  <Button type='EQUAL' id={id} />
+const EqualButton = ({id, value}) => (
+  <Button type='EQUAL' id={id} value={value} />
 )
 
-const ClearAllButton = ({id}) => (
-  <Button type='CLEARALL' id={id} />
+const ClearAllButton = ({id, value}) => (
+  <Button type='CLEARALL' id={id} value={value} />
 )
 
-const ClearLastButton = ({id}) => (
-  <Button type='CLEARLAST' id={id} />
+const ClearLastButton = ({id, value}) => (
+  <Button type='CLEARLAST' id={id} value={value} />
 )
 
 const Display = ({
   data
 }) =>
   (
-    <div>
-      <p>{data.input}</p>
-      <p>{data.current}</p>
+    <div id='output'>
+      <div id='all-input'>{data.input}</div>
+      <div id='result'>{data.current}</div>
     </div>
   )
 
 const Buttons = ({}) =>
   (
-    <div>
-      <DigitButton id= '1' />
-      <DigitButton id= '2' />
-      <DigitButton id= '3' />
-      <DigitButton id= '4' />
-      <DigitButton id= '5' />
-      <DigitButton id= '6' />
-      <DigitButton id= '7' />
-      <DigitButton id= '8' />
-      <DigitButton id= '9' />
-      <DigitButton id= '0' />
-      <OperatorButton id='-' />
-      <OperatorButton id='+' />
-      <OperatorButton id='/' />
-      <OperatorButton id='*' />
-      <DotButton id='.'/>
-      <EqualButton id='='/>
-      <ClearAllButton id='C'/>
-      <ClearLastButton id='CE'/>
+    <div id='input'>
+      <ClearAllButton id='clear-all' value='C'/>
+      <ClearLastButton id='clear-last' value='CE'/>
+      <OperatorButton id='divide' value='/' />
+      <DigitButton id='seven' value='7' />
+      <DigitButton id='eight' value='8' />
+      <DigitButton id='nine' value='9' />
+      <OperatorButton id='multiply' value='*' />
+      <DigitButton id='four' value='4' />
+      <DigitButton id='five' value='5' />
+      <DigitButton id='six' value='6' />
+      <OperatorButton id='minus' value='-' />
+      <DigitButton id='one' value='1' />
+      <DigitButton id='two' value='2' />
+      <DigitButton id='three' value='3' />
+      <DigitButton id='zero' value='0' />
+      <DotButton id='dot' value='.'/>
+      <EqualButton id='equal' value='='/>
+      <OperatorButton id='plus' value='+' />
     </div>
     )
 

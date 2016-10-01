@@ -22,6 +22,10 @@ const testDigit = () => {
   action = {type: 'DIGIT', value: 0};
   stateAfter = {input: [], current: '123.0'};
   expect(calculator(stateBefore, action)).toEqual(stateAfter);
+  stateBefore = {input: [1, '+', 1, '='], current: '2'};
+  action = {type: 'DIGIT', value: 3};
+  stateAfter = {input: [], current: '3'};
+  expect(calculator(stateBefore, action)).toEqual(stateAfter);
 }
 
 const testOperator = () => {
