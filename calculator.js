@@ -94,10 +94,11 @@ class Calculator extends React.Component {
 
 const Button = ({
   type,
+  className,
   id,
   value
 }) => (
-  <button id={id} className="btn digit"
+  <button id={id} className={className}
   onClick={() => {
       store.dispatch({
         type: type,
@@ -110,27 +111,27 @@ const Button = ({
   )
 
 const DigitButton = ({id, value}) => (
-    <Button type='DIGIT' id={id} value={value} />
+    <Button type='DIGIT' className='btn digit' id={id} value={value} />
 )
 
 const OperatorButton = ({id, value}) => (
-    <Button type='OPERATOR' id={id} value={value} />
+    <Button type='OPERATOR' className='btn operator' id={id} value={value} />
 )
 
 const DotButton = ({id, value}) => (
-  <Button type='DOT' id={id} value={value} />
+  <Button type='DOT' className='btn dot' id={id} value={value} />
 )
 
 const EqualButton = ({id, value}) => (
-  <Button type='EQUAL' id={id} value={value} />
+  <Button type='EQUAL' className='btn equal' id={id} value={value} />
 )
 
 const ClearAllButton = ({id, value}) => (
-  <Button type='CLEARALL' id={id} value={value} />
+  <Button type='CLEARALL' className='btn clear' id={id} value={value} />
 )
 
 const ClearLastButton = ({id, value}) => (
-  <Button type='CLEARLAST' id={id} value={value} />
+  <Button type='CLEARLAST' className='btn clear' id={id} value={value} />
 )
 
 const Display = ({
@@ -160,6 +161,7 @@ const Buttons = ({}) =>
       <DigitButton id='one' value='1' />
       <DigitButton id='two' value='2' />
       <DigitButton id='three' value='3' />
+      <DigitButton id='empty' value='' />
       <DigitButton id='zero' value='0' />
       <DotButton id='dot' value='.'/>
       <EqualButton id='equal' value='='/>
