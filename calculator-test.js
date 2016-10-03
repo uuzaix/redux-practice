@@ -64,6 +64,10 @@ let testDot = () => {
   action = {type: 'DOT'};
   stateAfter = {input: [], current: '1.0'};
   expect(calculator(stateBefore, action)).toEqual(stateAfter);
+  stateBefore = {input: [1, '+', 1.4, '='], current: '2.4'};
+  action = {type: 'DOT'};
+  stateAfter = {input: [], current: '0.'};
+  expect(calculator(stateBefore, action)).toEqual(stateAfter);
 }
 
 let testEqual = () => {
@@ -86,6 +90,10 @@ let testEqual = () => {
   stateBefore = {input: [2.3, '-'], current: '1.'};
   action = {type: 'EQUAL'};
   stateAfter = {input: [2.3, '-', 1, '='], current: '1.3'};
+  expect(calculator(stateBefore, action)).toEqual(stateAfter);
+  stateBefore = {input: [1, '+', 1, '='], current: '2'};
+  action = {type: 'EQUAL'};
+  stateAfter = {input: [], current: '0'};
   expect(calculator(stateBefore, action)).toEqual(stateAfter);
 }
 

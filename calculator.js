@@ -27,26 +27,36 @@ let calculator = (state = {input: [], current: '0'}, action) => {
       return Object.assign({}, state, {input: [...state.input, parseFloat(state.current), action.value], current: '0'});
 
     case 'DOT':
-      if (state.current.indexOf('.') !== -1) {
-        return state;
+      if (_.last(state.input) === '=') {
+        return Object.assign({}, {input: [], current: '0.'});
       }
-      return Object.assign({}, state, {current: state.current + '.'});
+      else {
+        if (state.current.indexOf('.') !== -1) {
+          return state;
+        }
+        return Object.assign({}, state, {current: state.current + '.'});
+      }
 
     case 'EQUAL':
       if (state.input.length === 0 && state.current !== '0') {
         return Object.assign({}, state, {input: [parseFloat(state.current), '=']});
       }
-      if (state.input.length !== 0) {
-        let current = eval([...state.input, parseInt(state.current)].join(''));
-        if (current.toString().indexOf('.') !== -1) {
-          current = current.toFixed(8);
-          while (current.endsWith("0")) {
-            current = current.substring(0, current.length-1);
+      if (_.last(state.input) === '=') {
+        return Object.assign({}, {input: [], current: '0'});
+      }
+      else {
+        if (state.input.length !== 0) {
+          let current = eval([...state.input, parseInt(state.current)].join(''));
+          if (current.toString().indexOf('.') !== -1) {
+            current = current.toFixed(8);
+            while (current.endsWith("0")) {
+              current = current.substring(0, current.length-1);
+            }
           }
+          return Object.assign({}, state, {input: [...state.input, parseFloat(state.current), '='], current: current.toString()})
+        } else {
+          return state;
         }
-        return Object.assign({}, state, {input: [...state.input, parseFloat(state.current), '='], current: current.toString()})
-      } else {
-        return state;
       }
 
     case 'CLEARALL':
@@ -98,8 +108,10 @@ const Button = ({
   id,
   value
 }) => (
-  <button id={id} className={className}
-  onClick={() => {
+  <button 
+    id={id} 
+    className={className}
+    onClick={() => {
       store.dispatch({
         type: type,
         value: value
@@ -108,7 +120,7 @@ const Button = ({
   >
   {value}
   </button>
-  )
+)
 
 const DigitButton = ({id, value}) => (
     <Button type='DIGIT' className='btn digit' id={id} value={value} />
@@ -163,8 +175,8 @@ const Buttons = ({}) =>
       <DigitButton id='three' value='3' />
       <DigitButton id='empty' value='' />
       <DigitButton id='zero' value='0' />
-      <DotButton id='dot' value='.'/>
-      <EqualButton id='equal' value='='/>
+      <DotButton id='dot' value='.' />
+      <EqualButton id='equal' value='=' />
       <OperatorButton id='plus' value='+' />
     </div>
     )
