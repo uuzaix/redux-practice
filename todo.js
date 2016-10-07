@@ -177,7 +177,7 @@ class FilterLink extends React.Component {
       );
   }
 }
-FilterLink.ContextTypes = {
+FilterLink.contextTypes = {
   store: React.PropTypes.object
 }
 
@@ -254,7 +254,7 @@ const AddTodo = (props, { store }) => {
       </div>
       )
 }
-AddTodo.ContextTypes = {
+AddTodo.contextTypes = {
   store: React.PropTypes.object
 }
 
@@ -274,7 +274,7 @@ const getVisibleTodos = (
   }
 }
 
-class VisibleTodoList extends Component {
+class VisibleTodoList extends React.Component {
   componentDidMount() {
     const { store } = this.context;
     this.unsubscribe = store.subscribe(() =>
@@ -310,9 +310,10 @@ class VisibleTodoList extends Component {
   }
 }
 
-VisibleTodoList.ContextTypes = {
+VisibleTodoList.contextTypes = {
   store: React.PropTypes.object
 }
+
 let nextTodoId = 0;
 
 const TodoApp = () => (
@@ -339,9 +340,12 @@ Provider.childContextTypes = {
 }
 
 var { createStore } = require('redux');
+//var Provider = require('react-redux').Provider;
+
+
 
 ReactDOM.render(
-  <Provider store={createStore(todoApp)} >
+  <Provider store={createStore(todoApp)}>
     <TodoApp />
   </Provider>,
   document.getElementById('root')
