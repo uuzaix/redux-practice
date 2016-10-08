@@ -177,6 +177,7 @@ class FilterLink extends React.Component {
       );
   }
 }
+
 FilterLink.contextTypes = {
   store: React.PropTypes.object
 }
@@ -254,6 +255,7 @@ const AddTodo = (props, { store }) => {
       </div>
       )
 }
+
 AddTodo.contextTypes = {
   store: React.PropTypes.object
 }
@@ -274,45 +276,33 @@ const getVisibleTodos = (
   }
 }
 
-class VisibleTodoList extends React.Component {
-  componentDidMount() {
-    const { store } = this.context;
-    this.unsubscribe = store.subscribe(() =>
-      this.forceUpdate()
-    );
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
-  render() {
-    const props = this.props;
-    const { store } = this.context;
-    const state = store.getState();
-
-    return (
-      <TodoList
-        todos={
-          getVisibleTodos(
-            state.todos,
-            state.visibilityFilter
-          )
-        }
-        onTodoClick={id =>
-          store.dispatch({
-            type: 'TOGGLE_TODO',
-            id
-          }) 
-        }
-      />
-    );
+const mapStateToProps = (state) => {
+  return {
+    todos: getVisibleTodos(
+      state.todos,
+      state.visibilityFilter
+      )
   }
 }
 
-VisibleTodoList.contextTypes = {
-  store: React.PropTypes.object
-}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onTodoClick: (id) => {
+      dispatch({
+        type: 'TOGGLE_TODO',
+        id
+      })
+    } 
+  };
+};
+
+var { connect } = require('react-redux');
+
+const VisibleTodoList = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TodoList);
+
 
 let nextTodoId = 0;
 
@@ -324,25 +314,9 @@ const TodoApp = () => (
   </div>
 );
 
-class Provider extends React.Component {
-  getChildContext() {
-    return {
-      store: this.props.store
-    };
-  }
-  render() {
-    return this.props.children;
-  }
-}
-
-Provider.childContextTypes = {
-  store: React.PropTypes.object
-}
 
 var { createStore } = require('redux');
-//var Provider = require('react-redux').Provider;
-
-
+var Provider = require('react-redux').Provider;
 
 ReactDOM.render(
   <Provider store={createStore(todoApp)}>
