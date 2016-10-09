@@ -1,7 +1,15 @@
-var expect = require('expect');
+const expect = require('expect');
 
-var { combineReducers } = require('redux');
+const { combineReducers } = require('redux');
+const { createStore } = require('redux');
 
+const React = require('react');
+const { Component } = require('react');
+
+const ReactDOM = require('react-dom');
+
+const { Provider } = require('react-redux');
+const { connect } = require('react-redux');
 
 const todo = (state, action) => {
   switch (action.type) {
@@ -115,13 +123,6 @@ console.log('tests pass');
 //   type: 'SET_VISIBILITY_FILTER',
 //   filter: 'SHOW_COMPLETED'
 // })
-
-
-
-var React = require('react');
-var { Component } = require('react');
-var ReactDOM = require('react-dom');
-
 
 
 const Link = ({
@@ -296,7 +297,6 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-var { connect } = require('react-redux');
 
 const VisibleTodoList = connect(
   mapStateToProps,
@@ -315,8 +315,7 @@ const TodoApp = () => (
 );
 
 
-var { createStore } = require('redux');
-var Provider = require('react-redux').Provider;
+
 
 ReactDOM.render(
   <Provider store={createStore(todoApp)}>
