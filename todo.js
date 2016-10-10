@@ -1,15 +1,13 @@
 const expect = require('expect');
 
-const { combineReducers } = require('redux');
-const { createStore } = require('redux');
+const { combineReducers, createStore } = require('redux');
 
 const React = require('react');
-const { Component } = require('react');
+const { Component } = React;
 
 const ReactDOM = require('react-dom');
 
-const { Provider } = require('react-redux');
-const { connect } = require('react-redux');
+const { connect, Provider } = require('react-redux');
 
 const todo = (state, action) => {
   switch (action.type) {
@@ -125,6 +123,28 @@ console.log('tests pass');
 // })
 
 
+//action creators
+let nextTodoId = 0;
+const addTodo = (text) => {
+  return {
+    type: 'ADD_TODO',
+    id:nextTodoId++,
+    text
+  };
+};
+const setVisibilityFilter = (filter) => {
+  return {
+    type: 'SET_VISIBILITY_FILTER',
+    filter
+  };
+};
+const togleTodo = (id) => {
+  return {
+    type: 'TOGGLE_TODO',
+    id
+  };
+};
+
 const Link = ({
   active,
   children,
@@ -160,10 +180,8 @@ const mapDispatchToLinkProps = (
 ) => {
   return {
     onClick: () => {
-      dispatch({
-        type: 'SET_VISIBILITY_FILTER',
-        filter: ownProps.filter
-      });
+      dispatch(
+        setVisibilityFilter(ownProps.filter));
     }
   };
 }
@@ -226,7 +244,8 @@ const TodoList = ({
   </ul>
 );
 
-let nextTodoId = 0;
+
+
 let AddTodo = ({ dispatch }) => {
   let input;
   return (
@@ -235,11 +254,7 @@ let AddTodo = ({ dispatch }) => {
         input = node;
       }} />
         <button onClick={() => {
-          dispatch({
-            type: 'ADD_TODO',
-            id:nextTodoId++,
-            text: input.value
-          })
+          dispatch(addTodo(input.value));
           input.value = '';
         }}>
         Add Todo
@@ -277,10 +292,7 @@ const mapStateToTodoListProps = (state) => {
 const mapDispatchToTodoListProps = (dispatch) => {
   return {
     onTodoClick: (id) => {
-      dispatch({
-        type: 'TOGGLE_TODO',
-        id
-      })
+      dispatch(togleTodo(id));
     } 
   };
 };
