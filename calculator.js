@@ -1,9 +1,11 @@
-var _ = require('lodash');
-var {createStore} = require('redux');
+const _ = require('lodash');
+const {createStore} = require('redux');
 
-var React = require('react');
-var { Component } = require('react');
-var ReactDOM = require('react-dom');
+const React = require('react');
+const { Component } = React;
+const ReactDOM = require('react-dom');
+
+const { connect, Provider } = require('react-redux');
 
 
 let calculator = (state = {input: [], current: '0'}, action) => {
@@ -77,7 +79,7 @@ module.exports = {
     calculator
 };
 
-const store = createStore(calculator);
+//const store = createStore(calculator);
 
 // store.subscribe(() => console.log(store.getState()));
 
@@ -181,14 +183,13 @@ const Buttons = ({}) =>
     </div>
     )
 
-const render = () => {
-  ReactDOM.render(
-    <Calculator 
-    {...store.getState()}
-    />,
-    document.getElementById('calculator')
-  );
-};
+ReactDOM.render(
+  <Provider store={createStore(calculator)}>
+    <Calculator />
+  </Provider>,
+  document.getElementById('calculator')
+);
 
-store.subscribe(render);
-render();
+
+// store.subscribe(render);
+// render();
