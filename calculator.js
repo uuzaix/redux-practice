@@ -8,43 +8,43 @@ const ReactDOM = require('react-dom');
 const { connect, Provider } = require('react-redux');
 
 
-let calculator = (state = {input: [], current: '0'}, action) => {
+let calculator = (state = { input: [], current: '0' }, action) => {
   switch (action.type) {
     case 'DIGIT':
       if (state.current === '0') {
-        return Object.assign({}, state, {current: action.value.toString()});
+        return Object.assign({}, state, { current: action.value.toString() });
       } else if (_.last(state.input) === '=') {
-        return Object.assign({}, {input: [], current: action.value.toString()});
+        return Object.assign({}, { input: [], current: action.value.toString() });
       } else {
-        return Object.assign({}, state, {current: state.current + action.value});
+        return Object.assign({}, state, { current: state.current + action.value });
       }
 
     case 'OPERATOR':
       if (typeof _.last(state.input) === 'string' && state.current === '0') {
-        return Object.assign({}, state, {input: [...state.input.slice(0, state.input.length-1),  action.value], current: '0'});
+        return Object.assign({}, state, { input: [...state.input.slice(0, state.input.length - 1), action.value], current: '0' });
       }
       else if (_.last(state.input) === '=') {
-        return Object.assign({}, {input: [parseFloat(state.current), action.value], current: '0'});
+        return Object.assign({}, { input: [parseFloat(state.current), action.value], current: '0' });
       }
-      return Object.assign({}, state, {input: [...state.input, parseFloat(state.current), action.value], current: '0'});
+      return Object.assign({}, state, { input: [...state.input, parseFloat(state.current), action.value], current: '0' });
 
     case 'DOT':
       if (_.last(state.input) === '=') {
-        return Object.assign({}, {input: [], current: '0.'});
+        return Object.assign({}, { input: [], current: '0.' });
       }
       else {
         if (state.current.indexOf('.') !== -1) {
           return state;
         }
-        return Object.assign({}, state, {current: state.current + '.'});
+        return Object.assign({}, state, { current: state.current + '.' });
       }
 
     case 'EQUAL':
       if (state.input.length === 0 && state.current !== '0') {
-        return Object.assign({}, state, {input: [parseFloat(state.current), '=']});
+        return Object.assign({}, state, { input: [parseFloat(state.current), '='] });
       }
       if (_.last(state.input) === '=') {
-        return Object.assign({}, {input: [], current: '0'});
+        return Object.assign({}, { input: [], current: '0' });
       }
       else {
         if (state.input.length !== 0) {
@@ -52,23 +52,23 @@ let calculator = (state = {input: [], current: '0'}, action) => {
           if (current.toString().indexOf('.') !== -1) {
             current = current.toFixed(8);
             while (current.endsWith("0")) {
-              current = current.substring(0, current.length-1);
+              current = current.substring(0, current.length - 1);
             }
           }
-          return Object.assign({}, state, {input: [...state.input, parseFloat(state.current), '='], current: current.toString()})
+          return Object.assign({}, state, { input: [...state.input, parseFloat(state.current), '='], current: current.toString() })
         } else {
           return state;
         }
       }
 
     case 'CLEARALL':
-      return {input: [], current: '0'};
+      return { input: [], current: '0' };
 
     case 'CLEARLAST':
       if (_.last(state.input) === '=') {
-        return {input: [], current: '0'};
+        return { input: [], current: '0' };
       }
-      return Object.assign({}, state, {current: '0'});
+      return Object.assign({}, state, { current: '0' });
 
     default:
       return state;
@@ -76,10 +76,10 @@ let calculator = (state = {input: [], current: '0'}, action) => {
 }
 
 module.exports = {
-    calculator
+  calculator
 };
 
-//const store = createStore(calculator);
+const store = createStore(calculator);
 
 // store.subscribe(() => console.log(store.getState()));
 
@@ -93,98 +93,122 @@ module.exports = {
 // store.dispatch({type: 'EQUAL'});
 // store.dispatch({type: 'CLEARALL'});
 
-class Calculator extends React.Component {
-  render() {
-    return (
-      <div>
-        <Display data={this.props} />
-        <Buttons />
-      </div>
-    );
+const mapStateToDisplayProps = (state) => {
+  return {
+    input: state.input,
+    current: state.current
   }
-}
+};
 
-const Button = ({
-  type,
-  className,
-  id,
-  value
-}) => (
-  <button 
-    id={id} 
-    className={className}
-    onClick={() => {
-      store.dispatch({
+
+const mapDispatchToDisplayProps = (dispatch) => {
+  return
+};
+
+const Display = ({ input, current }) => (
+  <div id='output'>
+    <div id='all-input'>{input}</div>
+    <div id='result'>{current}</div>
+  </div>
+)
+
+
+const DisplayComponent = connect(
+  mapStateToDisplayProps,
+  mapDispatchToDisplayProps
+)(Display);
+
+const mapStateToButtonProps = (state) => {
+  return
+};
+
+const mapDispatchToButtonProps = (dispatch) => {
+  return {
+    onButtonClick: (type, value) => {
+      dispatch({
         type: type,
         value: value
       });
-    }}
-  >
-  {value}
+    }
+  }
+};
+
+const Button = ({type, className, id, value, onButtonClick}) => (
+  <button
+    id={id}
+    className={className}
+    onClick={() => onButtonClick(type, value)}
+    >
+    {value}
   </button>
 )
 
+const ButtonComponent = connect(
+  mapStateToButtonProps,
+  mapDispatchToButtonProps
+)(Button);
+
+
 const DigitButton = ({id, value}) => (
-    <Button type='DIGIT' className='btn digit' id={id} value={value} />
+  <ButtonComponent type='DIGIT' className='btn digit' id={id} value={value} />
 )
 
 const OperatorButton = ({id, value}) => (
-    <Button type='OPERATOR' className='btn operator' id={id} value={value} />
+  <ButtonComponent type='OPERATOR' className='btn operator' id={id} value={value} />
 )
 
 const DotButton = ({id, value}) => (
-  <Button type='DOT' className='btn dot' id={id} value={value} />
+  <ButtonComponent type='DOT' className='btn dot' id={id} value={value} />
 )
 
 const EqualButton = ({id, value}) => (
-  <Button type='EQUAL' className='btn equal' id={id} value={value} />
+  <ButtonComponent type='EQUAL' className='btn equal' id={id} value={value} />
 )
 
 const ClearAllButton = ({id, value}) => (
-  <Button type='CLEARALL' className='btn clear' id={id} value={value} />
+  <ButtonComponent type='CLEARALL' className='btn clear' id={id} value={value} />
 )
 
 const ClearLastButton = ({id, value}) => (
-  <Button type='CLEARLAST' className='btn clear' id={id} value={value} />
+  <ButtonComponent type='CLEARLAST' className='btn clear' id={id} value={value} />
 )
 
-const Display = ({
-  data
-}) =>
-  (
-    <div id='output'>
-      <div id='all-input'>{data.input}</div>
-      <div id='result'>{data.current}</div>
-    </div>
-  )
 
-const Buttons = ({}) =>
-  (
-    <div id='input'>
-      <ClearAllButton id='clear-all' value='C'/>
-      <ClearLastButton id='clear-last' value='CE'/>
-      <OperatorButton id='divide' value='/' />
-      <DigitButton id='seven' value='7' />
-      <DigitButton id='eight' value='8' />
-      <DigitButton id='nine' value='9' />
-      <OperatorButton id='multiply' value='*' />
-      <DigitButton id='four' value='4' />
-      <DigitButton id='five' value='5' />
-      <DigitButton id='six' value='6' />
-      <OperatorButton id='minus' value='-' />
-      <DigitButton id='one' value='1' />
-      <DigitButton id='two' value='2' />
-      <DigitButton id='three' value='3' />
-      <DigitButton id='empty' value='' />
-      <DigitButton id='zero' value='0' />
-      <DotButton id='dot' value='.' />
-      <EqualButton id='equal' value='=' />
-      <OperatorButton id='plus' value='+' />
-    </div>
-    )
+const Buttons = ({}) => (
+  <div id='input'>
+    <ClearAllButton id='clear-all' value='C' />
+    <ClearLastButton id='clear-last' value='CE' />
+    <OperatorButton id='divide' value='/' />
+    <DigitButton id='seven' value='7' />
+    <DigitButton id='eight' value='8' />
+    <DigitButton id='nine' value='9' />
+    <OperatorButton id='multiply' value='*' />
+    <DigitButton id='four' value='4' />
+    <DigitButton id='five' value='5' />
+    <DigitButton id='six' value='6' />
+    <OperatorButton id='minus' value='-' />
+    <DigitButton id='one' value='1' />
+    <DigitButton id='two' value='2' />
+    <DigitButton id='three' value='3' />
+    <DigitButton id='empty' value='' />
+    <DigitButton id='zero' value='0' />
+    <DotButton id='dot' value='.' />
+    <EqualButton id='equal' value='=' />
+    <OperatorButton id='plus' value='+' />
+  </div>
+)
+
+
+const Calculator = () => (
+  <div>
+    <DisplayComponent />
+    <Buttons />
+  </div>
+)
+
 
 ReactDOM.render(
-  <Provider store={createStore(calculator)}>
+  <Provider store={store}>
     <Calculator />
   </Provider>,
   document.getElementById('calculator')

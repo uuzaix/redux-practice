@@ -1,10 +1,10 @@
-{
+  {
   "name": "redux-tutorial-videos",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --watch counter.js build/bundle.js --module-bind js=babel",
+    "build": "webpack --watch calculator.js build/bundle_calc.js --module-bind js=babel",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
