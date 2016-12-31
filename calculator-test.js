@@ -1,5 +1,5 @@
 var expect = require('expect');
-const { calculator } = require('./calculator.js');
+const { calculator } = require('./calculator-reducer.js');
 
 const testDefault = () => {
   expect(calculator(undefined, {type: 'FOO'})).toEqual({input: [], current: '0'})
