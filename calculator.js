@@ -10,7 +10,7 @@ const { connect, Provider } = require('react-redux');
 const { calculator } = require('./calculator-reducer.js');
 
 
-const store = createStore(calculator);
+const store = createStore(calculator, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 // store.subscribe(() => console.log(store.getState()));
 

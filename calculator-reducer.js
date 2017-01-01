@@ -32,26 +32,22 @@ let calculator = (state = { input: [], current: '0' }, action) => {
       }
 
     case 'EQUAL':
-      if (state.input.length === 0 && state.current !== '0') {
+      if (state.input.length === 0 && state.current !== '0' || _.last(state.input) === '=') {
         return Object.assign({}, state, { input: [parseFloat(state.current), '='] });
       }
-      if (_.last(state.input) === '=') {
-        return Object.assign({}, { input: [], current: '0' });
-      }
-      else {
-        if (state.input.length !== 0) {
-          let current = eval([...state.input, parseInt(state.current)].join(''));
-          if (current.toString().indexOf('.') !== -1) {
-            current = current.toFixed(8);
-            while (current.endsWith("0")) {
-              current = current.substring(0, current.length - 1);
-            }
+      if (state.input.length !== 0) {
+        let current = eval([...state.input, parseFloat(state.current)].join(''));
+        if (current.toString().indexOf('.') !== -1) {
+          current = current.toFixed(8);
+          while (current.endsWith("0")) {
+            current = current.substring(0, current.length - 1);
           }
-          return Object.assign({}, state, { input: [...state.input, parseFloat(state.current), '='], current: current.toString() })
-        } else {
-          return state;
         }
+        return Object.assign({}, state, { input: [...state.input, parseFloat(state.current), '='], current: current.toString() })
+      } else {
+        return state;
       }
+
 
     case 'CLEARALL':
       return { input: [], current: '0' };
