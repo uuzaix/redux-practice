@@ -1,8 +1,15 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+} 
 html, body {
   font-family: 'Orbitron', sans-serif;
   height: 100%;
   width: 100%;
   background-color: #DECEC7;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 #calculator {
@@ -45,15 +52,21 @@ html, body {
 }
 
 .btn {
+  font-family: 'Orbitron', sans-serif;
   height: 40px;
   width: 55px;
   margin: 0px 4px 12px 8px;
-  color: #FFF;
   border-radius: 7px;
   font-weight: bold;
   font-size: 20px;
   background-color: #515473;
   box-shadow: 0 3px #2D304E;
+  border: 1px solid transparent;
+  vertical-align: middle;
+  padding: 6px 12px;
+  line-height: 1.42857143;
+  overflow: visible;
+  white-space: nowrap;
 }
 
 .btn, .btn:hover, .btn:active, .btn:focus, .btn:active:focus {
