@@ -12,29 +12,6 @@ const { calculator } = require('./calculator-reducer.js');
 
 const store = createStore(calculator, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
-// store.subscribe(() => console.log(store.getState()));
-
-// store.dispatch({type: 'DIGIT', value: 1});
-// store.dispatch({type: 'DOT'});
-// store.dispatch({type: 'DIGIT', value: 3});
-// store.dispatch({type: 'OPERATOR', value: '+'});
-// store.dispatch({type: 'DIGIT', value: 2});
-// store.dispatch({type: 'CLEARLAST'});
-// store.dispatch({type: 'DIGIT', value: 5});
-// store.dispatch({type: 'EQUAL'});
-// store.dispatch({type: 'CLEARALL'});
-
-const mapStateToDisplayProps = (state) => {
-  return {
-    input: state.input,
-    current: state.current
-  }
-};
-
-
-const mapDispatchToDisplayProps = (dispatch) => {
-  return {}
-};
 
 const Display = ({ input, current }) => (
   <div id='output'>
@@ -43,17 +20,73 @@ const Display = ({ input, current }) => (
   </div>
 )
 
+const Button = ({type, className, id, value, onButtonClick}) => (
+  <button
+    id={id}
+    className={className}
+    onClick={() => onButtonClick(type, value)}
+  >
+    {value}
+  </button>
+)
 
-const DisplayComponent = connect(
-  mapStateToDisplayProps,
-  mapDispatchToDisplayProps
-)(Display);
+const DigitButton = ({id, value, onButtonClick}) => (
+  <Button type='DIGIT' className='btn digit' id={id} value={value} onButtonClick={onButtonClick} />
+)
 
-const mapStateToButtonProps = (state) => {
-  return {}
-};
+const OperatorButton = ({id, value, onButtonClick}) => (
+  <Button type='OPERATOR' className='btn operator' id={id} value={value} onButtonClick={onButtonClick} />
+)
 
-const mapDispatchToButtonProps = (dispatch) => {
+const DotButton = ({id, value, onButtonClick}) => (
+  <Button type='DOT' className='btn dot' id={id} value={value} onButtonClick={onButtonClick} />
+)
+
+const EqualButton = ({id, value, onButtonClick}) => (
+  <Button type='EQUAL' className='btn equal' id={id} value={value} onButtonClick={onButtonClick} />
+)
+
+const ClearAllButton = ({id, value, onButtonClick}) => (
+  <Button type='CLEARALL' className='btn clear' id={id} value={value} onButtonClick={onButtonClick} />
+)
+
+const ClearLastButton = ({id, value, onButtonClick}) => (
+  <Button type='CLEARLAST' className='btn clear' id={id} value={value} onButtonClick={onButtonClick} />
+)
+
+
+const Buttons = ({onButtonClick}) => (
+  <div id='input'>
+    <ClearAllButton id='clear-all' value='C' onButtonClick={onButtonClick} />
+    <ClearLastButton id='clear-last' value='CE' onButtonClick={onButtonClick} />
+    <OperatorButton id='divide' value='/' onButtonClick={onButtonClick} />
+    <DigitButton id='seven' value='7' onButtonClick={onButtonClick} />
+    <DigitButton id='eight' value='8' onButtonClick={onButtonClick} />
+    <DigitButton id='nine' value='9' onButtonClick={onButtonClick} />
+    <OperatorButton id='multiply' value='*' onButtonClick={onButtonClick} />
+    <DigitButton id='four' value='4' onButtonClick={onButtonClick} />
+    <DigitButton id='five' value='5' onButtonClick={onButtonClick} />
+    <DigitButton id='six' value='6' onButtonClick={onButtonClick} />
+    <OperatorButton id='minus' value='-' onButtonClick={onButtonClick} />
+    <DigitButton id='one' value='1' onButtonClick={onButtonClick} />
+    <DigitButton id='two' value='2' onButtonClick={onButtonClick} />
+    <DigitButton id='three' value='3' onButtonClick={onButtonClick} />
+    <DigitButton id='empty' value='' onButtonClick={onButtonClick} />
+    <DigitButton id='zero' value='0' onButtonClick={onButtonClick} />
+    <DotButton id='dot' value='.' onButtonClick={onButtonClick} />
+    <EqualButton id='equal' value='=' onButtonClick={onButtonClick} />
+    <OperatorButton id='plus' value='+' onButtonClick={onButtonClick} />
+  </div>
+)
+
+const Calculator = ({input, current, onButtonClick}) => (
+  <div>
+    <Display input={input} current={current} />
+    <Buttons onButtonClick={onButtonClick} />
+  </div>
+)
+
+const mapDispatchToProps = (dispatch) => {
   return {
     onButtonClick: (type, value) => {
       dispatch({
@@ -64,87 +97,22 @@ const mapDispatchToButtonProps = (dispatch) => {
   }
 };
 
-const Button = ({type, className, id, value, onButtonClick}) => (
-  <button
-    id={id}
-    className={className}
-    onClick={() => onButtonClick(type, value)}
-    >
-    {value}
-  </button>
-)
+const mapStateToProps = (state) => {
+  return {
+    input: state.input,
+    current: state.current
+  }
+};
 
-const ButtonComponent = connect(
-  mapStateToButtonProps,
-  mapDispatchToButtonProps
-)(Button);
-
-
-const DigitButton = ({id, value}) => (
-  <ButtonComponent type='DIGIT' className='btn digit' id={id} value={value} />
-)
-
-const OperatorButton = ({id, value}) => (
-  <ButtonComponent type='OPERATOR' className='btn operator' id={id} value={value} />
-)
-
-const DotButton = ({id, value}) => (
-  <ButtonComponent type='DOT' className='btn dot' id={id} value={value} />
-)
-
-const EqualButton = ({id, value}) => (
-  <ButtonComponent type='EQUAL' className='btn equal' id={id} value={value} />
-)
-
-const ClearAllButton = ({id, value}) => (
-  <ButtonComponent type='CLEARALL' className='btn clear' id={id} value={value} />
-)
-
-const ClearLastButton = ({id, value}) => (
-  <ButtonComponent type='CLEARLAST' className='btn clear' id={id} value={value} />
-)
-
-
-const Buttons = ({}) => (
-  <div id='input'>
-    <ClearAllButton id='clear-all' value='C' />
-    <ClearLastButton id='clear-last' value='CE' />
-    <OperatorButton id='divide' value='/' />
-    <DigitButton id='seven' value='7' />
-    <DigitButton id='eight' value='8' />
-    <DigitButton id='nine' value='9' />
-    <OperatorButton id='multiply' value='*' />
-    <DigitButton id='four' value='4' />
-    <DigitButton id='five' value='5' />
-    <DigitButton id='six' value='6' />
-    <OperatorButton id='minus' value='-' />
-    <DigitButton id='one' value='1' />
-    <DigitButton id='two' value='2' />
-    <DigitButton id='three' value='3' />
-    <DigitButton id='empty' value='' />
-    <DigitButton id='zero' value='0' />
-    <DotButton id='dot' value='.' />
-    <EqualButton id='equal' value='=' />
-    <OperatorButton id='plus' value='+' />
-  </div>
-)
-
-
-const Calculator = () => (
-  <div>
-    <DisplayComponent />
-    <Buttons />
-  </div>
-)
+const CalculatorComponent = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Calculator);
 
 
 ReactDOM.render(
   <Provider store={store}>
-    <Calculator />
+    <CalculatorComponent />
   </Provider>,
   document.getElementById('calculator')
 );
-
-
-// store.subscribe(render);
-// render();
