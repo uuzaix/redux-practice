@@ -3,16 +3,18 @@ const _ = require('lodash');
 let calculator = (state = { input: [], current: '0' }, action) => {
   switch (action.type) {
     case 'DIGIT':
-      if (state.current.length < 8 && (state.input.join('').length + state.current.length) < 20) {
-        if (state.current === '0') {
-          return Object.assign({}, state, { current: action.value.toString() });
-        } else if (_.last(state.input) === '=') {
-          return Object.assign({}, { input: [], current: action.value.toString() });
-        } else {
-          return Object.assign({}, state, { current: state.current + action.value });
+      if (_.last(state.input) === '=') {
+        return Object.assign({}, { input: [], current: action.value.toString() });
+      } else {
+        if (state.current.length < 8 && (state.input.join('').length + state.current.length) < 20) {
+          if (state.current === '0') {
+            return Object.assign({}, state, { current: action.value.toString() });
+          } else {
+            return Object.assign({}, state, { current: state.current + action.value });
+          }
         }
+        return state;
       }
-      return state;
 
     case 'OPERATOR':
       if (_.last(state.input) === '=') {
@@ -45,8 +47,9 @@ let calculator = (state = { input: [], current: '0' }, action) => {
       }
       if (state.input.length !== 0) {
         let current = eval([...state.input, parseFloat(state.current)].join(''));
-        if (current.toString().indexOf('.') !== -1) {
-          current = current.toFixed(8);
+        let dotIndex = current.toString().indexOf('.');
+        if (dotIndex !== -1) {
+          current = current.toFixed(8 - dotIndex);
           while (current.endsWith("0")) {
             current = current.substring(0, current.length - 1);
           }

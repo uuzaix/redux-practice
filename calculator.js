@@ -13,22 +13,41 @@ const { calculator } = require('./calculator-reducer.js');
 const store = createStore(calculator, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 
-const Display = ({ input, current }) => (
-  <div id='output'>
-    <div id='all-input'>{input}</div>
-    <div id='result'>{current}</div>
-  </div>
-)
+const Display = ({ input, current }) => {
+  const inputToDisplay = input.map(s => {
+    if (s === "/") {
+      return "\xF7"
+    } else if (s === "*") {
+      return "\xD7"
+    } else {
+      return s
+    }
+  })
+  return (
+    <div id='output'>
+      <div id='all-input'>{inputToDisplay}</div>
+      <div id='result'>{current}</div>
+    </div>)
+}
 
-const Button = ({type, className, id, value, onButtonClick}) => (
-  <button
-    id={id}
-    className={className}
-    onClick={() => onButtonClick(type, value)}
-  >
-    {value}
-  </button>
-)
+const Button = ({type, className, id, value, onButtonClick}) => {
+  let valueToDisplay = value;
+  if (value === "/") {
+    valueToDisplay = "\xF7"
+  } else if (value === "*") {
+    valueToDisplay = "\xD7"
+  }
+  return (
+    <button
+      id={id}
+      className={className}
+      onClick={() => onButtonClick(type, value)}
+    >
+      {valueToDisplay}
+    </button>
+  )
+}
+
 
 const DigitButton = ({id, value, onButtonClick}) => (
   <Button type='DIGIT' className='btn digit' id={id} value={value} onButtonClick={onButtonClick} />
